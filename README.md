@@ -2,6 +2,7 @@
 
 ## Members
 - Campobasso Antonio
+- Basso Luca
 
 ## Technologies
 ### Frontend
