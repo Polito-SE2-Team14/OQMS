@@ -74,25 +74,37 @@ app.get('/api/hello', (req,res)=>{
     return res.status(200).json(message);
 });
 
-//GET /api/ticket
-app.get('/api/ticket', (req,res)=>{
+//POST /api/ticket
+app.post('/api/ticket', async (req,res)=>{
 
-  return res.status(200).json({message:"Ticket"});
+  const service = req.body.service;
+
+  await logic.getNewTicket(service)
+  .then(ticket =>res.status(200).json(ticket))
+  .catch(() => res.status(500).send("Internal Server Error"));
+
+  //return res.status(200).json({message:"Ticket"});
 });
 
 
 //PUT /api/next
-app.put('/api/next', (req, res)=>{
+app.put('/api/next', async (req, res)=>{
 
-  return res.status(200).json({message:"Next"});
+  const counter = req.body.counter;
 
+  await logic.getNextClient(counter)
+  .then(customer =>res.status(200).json(customer))
+  .catch(() => res.status(500).send("Internal Server Error"));
+
+  //return res.status(200).json({message:"Next"});
 });
 
 //GET /api/stats
 app.get('/api/stats', (req, res)=>{
 
-  return res.status(200).json({message:"Stats"});
+  
 
+  return res.status(200).json({message:"Stats"});
 });
 
 
