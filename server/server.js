@@ -65,15 +65,6 @@ const isLoggedIn = (req, res, next) => {
   return res.status(401).json({ error: 'Not authorized' });
 }
 
-
-//GET /api/hello
-app.get('/api/hello', (req,res)=>{
-    let message = {
-      message: 'Hello World!'
-    }
-    return res.status(200).json(message);
-});
-
 //GET /api/stats
 app.get('/api/stats', async (req, res)=>{
  
