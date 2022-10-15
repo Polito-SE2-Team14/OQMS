@@ -3,6 +3,7 @@
 ## Members
 - Campobasso Antonio
 - Basso Luca
+- Colella Edoardo
 
 ## Technologies
 ### Frontend
