@@ -74,6 +74,24 @@ app.get('/api/hello', (req,res)=>{
     return res.status(200).json(message);
 });
 
+//GET /api/stats
+app.get('/api/stats', async (req, res)=>{
+ 
+  await logic.getStats()
+  .then(stats =>res.status(200).json(stats))
+  .catch(() => res.status(500).send("Internal Server Error"));
+
+});
+
+//GET /api/queue
+app.get('/api/queue', async (req, res)=>{
+
+  await logic.getQueue()
+  .then(queue =>res.status(200).json(queue))
+  .catch(() => res.status(500).send("Internal Server Error"));
+
+})
+
 //POST /api/ticket
 app.post('/api/ticket', async (req,res)=>{
 
@@ -99,15 +117,28 @@ app.put('/api/next', async (req, res)=>{
   //return res.status(200).json({message:"Next"});
 });
 
-//GET /api/stats
-app.get('/api/stats', (req, res)=>{
 
-  
 
-  return res.status(200).json({message:"Stats"});
+
+/*** User APIs */
+app.post('/api/sessions', passport.authenticate('local'), (req, res) => {
+  res.status(201).json(req.user);
+})
+
+// DELETE /api/session/current
+app.delete('/api/sessions/current', (req, res) => {
+  req.logout(() => {
+    res.end();
+  });
 });
 
-
+const validateEmail = (email) => {
+  return String(email)
+    .toLowerCase()
+    .match(
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+};
   
 
 
