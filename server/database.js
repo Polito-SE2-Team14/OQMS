@@ -166,3 +166,4 @@ exports.resetQueues = () =>
 		})
 	);
 
+Promise.all(/*drop()).then(() => */create()).then(() => populate()).catch(err => console.error(err));
