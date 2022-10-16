@@ -3,6 +3,7 @@
 ## Members
 - Campobasso Antonio
 - Basso Luca
+- Arash Honarvar 296225
 
 ## Technologies
 ### Frontend

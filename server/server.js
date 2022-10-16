@@ -23,6 +23,11 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
+
+//Controllers
+const ticketDAO = require('./DAO/ticketDAO');
+
+
 // Passport: set-up the local strategy
 passport.use(new LocalStrategy(async function verify(username, password, cb) {
 
@@ -84,13 +89,23 @@ app.get('/api/queue', async (req, res)=>{
 })
 
 //POST /api/ticket
-app.post('/api/ticket', async (req,res)=>{
+app.post('/api/ticket',
+  // body("serviceID").notEmpty(),
+  async (req,res)=>{
+    // const validationErrors = validationResult(request);
+    // if (!validationErrors.isEmpty()) {
+    //   return res.status(422).json("ERROR: Unprocessable Entity");
+    // }
 
-  const service = req.body.service;
+  const serviceID = req.body.serviceID;
 
-  await logic.getNewTicket(service)
-  .then(ticket =>res.status(200).json(ticket))
-  .catch(() => res.status(500).send("Internal Server Error"));
+  try {
+   const ticketID =  await ticketDAO.addNewTicket(serviceID);
+   const waitingTime = await ticketDAO.calculateWaitingTime(serviceID);
+   return res.status(200).json({ticketID:ticketID,ETA: waitingTime}); 
+  } catch (error) {
+    return res.status(500).end("Internal Server Error");
+  }
 
   //return res.status(200).json({message:"Ticket"});
 });
