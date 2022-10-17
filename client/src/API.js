@@ -14,8 +14,39 @@ const getServiceInfo = async () => {
         throw await response.text();
 }
 
+const getStats = async () =>{
+    const response = await fetch(SERVER_URL + '/api/serviceinfo', { credentials: 'include' })
+    .catch(err => { throw err })
+}
 
+const getQueue = async () =>{
+    const response = await fetch(SERVER_URL + '/api/serviceinfo', { credentials: 'include' })
+    .catch(err => { throw err })
+}
 
+const askForTicket = async (serviceID) =>{
+    const response = await fetch(SERVER_URL + '/api/ticket', {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify(serviceID)
+
+    });
+}
+
+const callNextCustomer = async (params) =>{
+    const response = await fetch(SERVER_URL + '/api/next', {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify(params)
+
+    });
+}
 
 const logIn = async (credentials) => {
     
@@ -30,7 +61,7 @@ const logOut = async () => {
 }
 
 const API = {
-    getServiceInfo
+    getServiceInfo, getStats, getQueue, askForTicket, callNextCustomer
 }
 
 export default API;
