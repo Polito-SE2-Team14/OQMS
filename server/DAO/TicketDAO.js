@@ -1,6 +1,6 @@
 'use strict';
 
-const { DB } = require('../database');
+const { DB } = require('../database/databaseManager');
 
 exports.addNewTicket = (serviceID) => {
   return new Promise((resolve, reject) => {

@@ -92,10 +92,9 @@ app.get('/api/queue', async (req, res) => {
 
 //GET /api/serviceinfo
 app.get('/api/serviceinfo', async (req, res) => {
-
   await serviceDAO.getServiceInfo()
     .then(info => res.status(200).json(info))
-    .catch(() => res.status(500).send("Internal Server Error"));
+    .catch(error => res.status(500).send(error));
 
 })
 
@@ -104,7 +103,7 @@ app.get('/api/serviceinfo', async (req, res) => {
 app.post('/api/ticket',
   body("serviceID").notEmpty(),
   async (req, res) => {
-    const validationErrors = validationResult(request);
+    const validationErrors = validationResult(req);
     if (!validationErrors.isEmpty()) {
       return res.status(422).json("ERROR: Unprocessable Entity");
     }
