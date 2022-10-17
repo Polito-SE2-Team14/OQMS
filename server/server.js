@@ -7,6 +7,8 @@ const session = require('express-session');
 const cors = require('cors');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
+const dayjs = require('dayjs')
+const { body, validationResult } = require('express-validator');
 
 
 // init express
@@ -26,7 +28,7 @@ app.use(cors(corsOptions));
 
 //Controllers
 const ticketDAO = require('./DAO/ticketDAO');
-
+const serviceDAO = require('./DAO/ServiceDAO');
 
 // Passport: set-up the local strategy
 passport.use(new LocalStrategy(async function verify(username, password, cb) {
@@ -71,54 +73,64 @@ const isLoggedIn = (req, res, next) => {
 }
 
 //GET /api/stats
-app.get('/api/stats', async (req, res)=>{
- 
+app.get('/api/stats', async (req, res) => {
+
   await logic.getStats()
-  .then(stats =>res.status(200).json(stats))
-  .catch(() => res.status(500).send("Internal Server Error"));
+    .then(stats => res.status(200).json(stats))
+    .catch(() => res.status(500).send("Internal Server Error"));
 
 });
 
 //GET /api/queue
-app.get('/api/queue', async (req, res)=>{
+app.get('/api/queue', async (req, res) => {
 
   await logic.getQueue()
-  .then(queue =>res.status(200).json(queue))
-  .catch(() => res.status(500).send("Internal Server Error"));
+    .then(queue => res.status(200).json(queue))
+    .catch(() => res.status(500).send("Internal Server Error"));
 
 })
 
+//GET /api/serviceinfo
+app.get('/api/serviceinfo', async (req, res) => {
+
+  await serviceDAO.getServiceInfo()
+    .then(info => res.status(200).json(info))
+    .catch(() => res.status(500).send("Internal Server Error"));
+
+})
+
+
 //POST /api/ticket
 app.post('/api/ticket',
-  // body("serviceID").notEmpty(),
-  async (req,res)=>{
-    // const validationErrors = validationResult(request);
-    // if (!validationErrors.isEmpty()) {
-    //   return res.status(422).json("ERROR: Unprocessable Entity");
-    // }
+  body("serviceID").notEmpty(),
+  async (req, res) => {
+    const validationErrors = validationResult(request);
+    if (!validationErrors.isEmpty()) {
+      return res.status(422).json("ERROR: Unprocessable Entity");
+    }
 
-  const serviceID = req.body.serviceID;
+    const serviceID = req.body.serviceID;
 
-  try {
-   const ticketID =  await ticketDAO.addNewTicket(serviceID);
-   const waitingTime = await ticketDAO.calculateWaitingTime(serviceID);
-   return res.status(200).json({ticketID:ticketID,ETA: waitingTime}); 
-  } catch (error) {
-    return res.status(500).end("Internal Server Error");
-  }
+    try {
+      const ticketID = await ticketDAO.addNewTicket(serviceID);
+      const waitingTime = await ticketDAO.calculateWaitingTime(serviceID);
+      return res.status(200).json({ ticketID: ticketID, ETA: waitingTime });
+    } catch (error) {
+      return res.status(500).end("Internal Server Error");
+    }
 
-  //return res.status(200).json({message:"Ticket"});
-});
+    //return res.status(200).json({message:"Ticket"});
+  });
 
 
 //PUT /api/next
-app.put('/api/next', async (req, res)=>{
+app.put('/api/next', async (req, res) => {
 
   const counter = req.body.counter;
 
   await logic.getNextClient(counter)
-  .then(customer =>res.status(200).json(customer))
-  .catch(() => res.status(500).send("Internal Server Error"));
+    .then(customer => res.status(200).json(customer))
+    .catch(() => res.status(500).send("Internal Server Error"));
 
   //return res.status(200).json({message:"Next"});
 });
@@ -145,10 +157,10 @@ const validateEmail = (email) => {
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     );
 };
-  
+
 
 
 // activate the server
 app.listen(port, () => {
-    console.log(`Server listening at http://localhost:${port}`);
-  });
+  console.log(`Server listening at http://localhost:${port}`);
+});

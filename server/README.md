@@ -79,3 +79,23 @@
     ]
     ```
 - **Error responses**:  500 Internal Server Error
+
+
+## GET /api/serviceinfo
+- **Description**: A client webpage asks for informations about existing services
+- **Request body**: none
+- **Response**:
+    '200 OK'
+    ```
+    [
+        {
+        "serviceID" : 123,
+        "serviceType" : "shipment" 
+        },
+        {
+        "serviceID" : 233,
+        "service" : "mailing service" 
+        }
+    ]
+    ```
+- **Error responses**:  500 Internal Server Error
