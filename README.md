@@ -4,6 +4,7 @@
 - Campobasso Antonio
 - Basso Luca
 - Arash Honarvar 296225
+- Colella Edoardo
 
 ## Technologies
 ### Frontend
