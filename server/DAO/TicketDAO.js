@@ -33,19 +33,6 @@ exports.getCountInQueueForService = (serviceID) => {
   });
 }
 
-exports.getCountInQueueForService = (serviceID) => {
-  return new Promise((resolve, reject) => {
-    const sql = "SELECT COUNT(DISTINCT ID) N FROM Ticket WHERE SERVICEID = ? AND SERVED = 0";
-    DB.get(sql, [serviceID],
-      (err, row) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(row.N);
-        }
-      });
-  });
-}
 
 exports.getNextClient = (serviceIds) => {
   const sql = "SELECT id, timestamp from Ticket WHERE serviceId = ? AND served = 0";
