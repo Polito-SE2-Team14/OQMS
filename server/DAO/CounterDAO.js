@@ -28,3 +28,17 @@ exports.getCountServicesForCounter = (counterID) => {
       });
   });
 }
+
+exports.getServicesForCounter = (counterID) => {
+  return new Promise((resolve, reject) => {
+    const sql = "SELECT DISTINCT serviceId FROM Counter WHERE counterId = ?";
+    DB.all(sql, [counterID],
+      (err, rows) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(rows);
+        }
+      });
+  });
+}

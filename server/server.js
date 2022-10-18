@@ -129,11 +129,12 @@ app.post('/api/ticket',
 
 //PUT /api/next
 app.put('/api/next', async (req, res) => {
+  const counterId = req.body.counterId;
 
-  const counter = req.body.counter;
-
-  await logic.getNextClient(counter)
-    .then(customer => res.status(200).json(customer))
+  await counterDAO.getServicesForCounter(counterId)
+    .then(serviceIds => ticketDAO.getNextClient(serviceIds))
+    .then(ticketId => ticketDAO.setServedClient(ticketId))
+    .then(ticketId => res.status(200).json(ticketId))
     .catch(() => res.status(500).send("Internal Server Error"));
 
   //return res.status(200).json({message:"Next"});
