@@ -2,3 +2,4 @@
 server/node_modules/
 server/database/OQMS.db
 client/node_modules/
+server/OQMS.db
