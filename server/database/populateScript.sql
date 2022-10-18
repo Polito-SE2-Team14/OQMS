@@ -1,0 +1,1 @@
+INSERT OR IGNORE INTO Service(ID, NAME, DURATION) VALUES (1, "PostService", 5);
