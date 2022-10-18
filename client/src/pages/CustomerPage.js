@@ -1,14 +1,20 @@
 import { useState } from "react";
 import { Container, Row, Button, Form } from "react-bootstrap";
+import { propTypes } from "react-bootstrap/esm/Image";
 
 // Move in separate file
-function CustomerPage() {
+function CustomerPage(props) {
 	
 	//call apis to get service
 	
 	const [service, setService] = useState(null);
 	const [active, setActive] = useState(false)
-	let services = [{ id: 1, name: "mailingService" }, { id: 2, name: "shipment" }];
+
+	
+
+	let services = props.services;
+
+	console.log("services",services)
 
 	const showTicket = () => {
 		console.log(service)
@@ -25,8 +31,9 @@ function CustomerPage() {
 				return <Form.Check onClick={() => setService(s)}
 					type={'radio'}
 					name={"group1"}
-					label={s.name}
-					id={s.id}
+					label={s.NAME}
+					id={s.ID}
+					key={s.ID}
 				/>
 			})}
 		
@@ -38,7 +45,7 @@ function CustomerPage() {
 		</Row>
 
 		{(active) && <Row>
-			<h1>{service.name + " " + service.id}</h1>
+			<h1>{service.NAME + " " + service.ID}</h1>
 		</Row>}
 		
 

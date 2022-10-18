@@ -1,5 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
 	BrowserRouter as Router,
 	Routes,
@@ -14,6 +14,7 @@ import {
 	PersonBadgeFill,
 } from "react-bootstrap-icons";
 
+import API from './API';
 import Navbar from "react-bootstrap/Navbar";
 import CustomerPage from "./pages/CustomerPage";
 import QueuePage from "./pages/QueuePage";
@@ -25,6 +26,19 @@ function App() {
 	// States regarding loggedIn status
 	const [loggedIn, setLoggedIn] = useState(false);
 	const [userType, setUserType] = useState(""); // Can be "Officer" or "Manager"
+	const [services, setServices] = useState([])
+
+	useEffect(() => {
+		const getServiceInfo = async () => {
+			await API.getServiceInfo()
+				.then((s) => {
+					console.log("try",s)
+					setServices(() => s)
+				})
+				.catch();
+		}
+		getServiceInfo()
+	}, []);
 
 	return (
 		<Router>
@@ -34,7 +48,7 @@ function App() {
 					element={
 						<>
 							<OfficeNavbar showLogin={true} loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
-							<MainApp loggedIn={loggedIn} userType={userType} />
+							<MainApp loggedIn={loggedIn} userType={userType} services={services}/>
 						</>
 					}
 				/>
@@ -74,7 +88,7 @@ function MainApp(props) {
 			// Show 404 page?
 		}
 	} else {
-		page = <CustomerPage />;
+		page = <CustomerPage services={props.services}/>;
 	}
 
 	return page;
