@@ -11,9 +11,8 @@ function create() {
 	sql.push('CREATE TABLE IF NOT EXISTS User(ID INTEGER PRIMARY KEY, USERNAME VARCHAR, PASSWORD VARCHAR, SALT VARCHAR, ROLEID INTEGER)');
 	sql.push('CREATE TABLE IF NOT EXISTS Role(ID INTEGER PRIMARY KEY, ROLE VARCHAR)');
 	sql.push('CREATE TABLE IF NOT EXISTS Service(ID INTEGER PRIMARY KEY, NAME VARCHAR, DURATION INTEGER)');
-	sql.push('CREATE TABLE IF NOT EXISTS Ticket(ID INTEGER PRIMARY KEY, SERVICEID INTEGER, TIMESTAMP VARCHAR, DATE VARCHAR)');
+	sql.push('CREATE TABLE IF NOT EXISTS Ticket(ID INTEGER PRIMARY KEY, SERVICEID INTEGER, TIMESTAMP VARCHAR, DATE VARCHAR, SERVED INTEGER)');
 	sql.push('CREATE TABLE IF NOT EXISTS Counter(ID INTEGER PRIMARY KEY, COUNTERID INTEGER, SERVICEID INTEGER)');
-	sql.push('CREATE TABLE IF NOT EXISTS Served(ID INTEGER PRIMARY KEY, TICKETID INTEGER, COUNTERID INTEGER)');
 
 	let create = [];
 	sql.forEach(s => {
@@ -53,11 +52,6 @@ function populate() {
 	let counters = [];
 	counters.push({});
 	counters.push({});
-
-	let servedSql = 'INSERT OR IGNORE INTO Served(TICKETID, COUNTERID) VALUES (?, ?)';
-	let served = [];
-	served.push({});
-	served.push({});
 
 	let population = [];
 	users.forEach(user => {
@@ -111,14 +105,6 @@ function populate() {
 				else resolve();
 			})
 		))
-	);
-	served.forEach(serve =>
-		population.push(new Promise((resolve, reject) =>
-			DB.run(servedSql, [], err => {
-				if (err) reject(err);
-				else resolve();
-			})
-		))
 	);*/
 
 	return population;
@@ -131,7 +117,6 @@ function drop() {
 	sql.push('DROP TABLE IF EXISTS Service');
 	sql.push('DROP TABLE IF EXISTS Ticket');
 	sql.push('DROP TABLE IF EXISTS Counter');
-	sql.push('DROP TABLE IF EXISTS Served');
 
 	let drop = [];
 	sql.forEach(s =>
