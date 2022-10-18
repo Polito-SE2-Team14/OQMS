@@ -29,6 +29,7 @@ app.use(cors(corsOptions));
 //Controllers
 const ticketDAO = require('./DAO/ticketDAO');
 const serviceDAO = require('./DAO/ServiceDAO');
+const counterDAO = require('./DAO/CounterDAO');
 
 // Passport: set-up the local strategy
 passport.use(new LocalStrategy(async function verify(username, password, cb) {
@@ -107,18 +108,15 @@ app.post('/api/ticket',
     if (!validationErrors.isEmpty()) {
       return res.status(422).json("ERROR: Unprocessable Entity");
     }
-
     const serviceID = req.body.serviceID;
-
     try {
-      const ticketID = await ticketDAO.addNewTicket(serviceID);
       const countInQueueForService = await ticketDAO.getCountInQueueForService(serviceID);
-      const allCountersForService = await ticketDAO.getAllCountersForService(serviceID);
+      const ticketID = await ticketDAO.addNewTicket(serviceID);
+      const allCountersForService = await counterDAO.getAllCountersForService(serviceID);
       const serviceInfo = await serviceDAO.getOneServiceInfo(serviceID);
       let calculationForCounters = 0
       for (let counter of allCountersForService) {
-        let counterID = counter.ID;
-        let countServicesForCounter = await ticketDAO.getCountServicesForCounter(counterID);
+        let countServicesForCounter = await counterDAO.getCountServicesForCounter(counter.COUNTERID);
         calculationForCounters = calculationForCounters + 1/countServicesForCounter;
       }
       const waitingTime = serviceInfo.DURATION * ((countInQueueForService/calculationForCounters)+ 1/2);
@@ -126,8 +124,6 @@ app.post('/api/ticket',
     } catch (error) {
       return res.status(500).end("Internal Server Error");
     }
-
-    //return res.status(200).json({message:"Ticket"});
   });
 
 
