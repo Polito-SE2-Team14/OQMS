@@ -29,12 +29,12 @@
 
 ## Ticket
  - Used for queue management and statistics
- - Updated every time a new ticket is created
+ - Updated every time a new ticket is created or a client is served
 
-| ID | SERVICEID | TIMESTAMP | DATE |
-|----|-----------|-----------|------|
-| INTEGER | INTEGER | STRING | STRING |
-| unique identifier for the ticket | identifier of requested service | time of ticket creation (HH:MM:SS) | date of ticket creation (DD-MM-YYY) |
+| ID | SERVICEID | TIMESTAMP | DATE | SERVED |
+|----|-----------|-----------|------|--------|
+| INTEGER | INTEGER | STRING | STRING | INTEGER |
+| unique identifier for the ticket | identifier of requested service | time of ticket creation (HH:MM:SS) | date of ticket creation (DD-MM-YYY) | 0 if the client is yet to be served, 1 otherwise|
 
 ## Counter
  - Used for counter definition (what services are available at each counter)
@@ -44,12 +44,3 @@
 |----|-----------|-----------|
 | INTEGER | INTEGER | INTEGER |
 | unique identifier for the tuple | identifier for the counter | identifier for one of the services available at the counter |
-
-## Served
- - Used for stats
- - Updated by clerk at task completion
-
-| ID | TICKETID | COUNTERID |
-|----|----------|-----------|
-| INTEGER | INTEGER | INTEGER |
-| unique identifier for the tuple | identifier for the ticket | identifier for the counter |
