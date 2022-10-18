@@ -112,7 +112,16 @@ app.post('/api/ticket',
 
     try {
       const ticketID = await ticketDAO.addNewTicket(serviceID);
-      const waitingTime = await ticketDAO.calculateWaitingTime(serviceID);
+      const countInQueueForService = await ticketDAO.getCountInQueueForService(serviceID);
+      const allCountersForService = await ticketDAO.getAllCountersForService(serviceID);
+      const serviceInfo = await serviceDAO.getOneServiceInfo(serviceID);
+      let calculationForCounters = 0
+      for (let counter of allCountersForService) {
+        let counterID = counter.ID;
+        let countServicesForCounter = await ticketDAO.getCountServicesForCounter(counterID);
+        calculationForCounters = calculationForCounters + 1/countServicesForCounter;
+      }
+      const waitingTime = serviceInfo.DURATION * ((countInQueueForService/calculationForCounters)+ 1/2);
       return res.status(200).json({ ticketID: ticketID, ETA: waitingTime });
     } catch (error) {
       return res.status(500).end("Internal Server Error");
