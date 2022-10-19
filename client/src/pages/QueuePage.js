@@ -1,57 +1,73 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Container, Row, ListGroup, Badge, Col, Button } from "react-bootstrap";
 
 function QueuePage() {
-	// TODO: Get data from server
-	let test_queue_list = [
-		{
-			type: "Account Management",
-			length: 13,
-		},
-		{
-			type: "Report",
-			length: 35,
-		},
-		{
-			type: "Out of ideas",
-			length: 2,
-		},
-		{
-			type: "Test",
-			length: 24,
-		},
-	];
+	useEffect(() => {
+		getQueueData();
+		setInterval(getQueueData, 10000); // Update data every 10s
+	}, []);
 
-	let test_ticket_calls = [
-		{
-			number: "#A99",
-			type: "Account Management",
-			desk: "3",
-		},
-		{
-			number: "#R35",
-			type: "Report",
-			desk: "7",
-		},
-		{
-			number: "#O29",
-			type: "Out of ideas",
-			desk: "8",
-		},
-		{
-			number: "#T22",
-			type: "Test",
-			desk: "2",
-		},
-		{
-			number: "#R36",
-			type: "Report",
-			desk: "5",
-		},
-	];
+	const getQueueData = () => {
+		// API call
+		let test_ticket_calls = [
+			{
+				number: "#A99",
+				type: "Account Management",
+				desk: "3",
+			},
+			{
+				number: "#R35",
+				type: "Report",
+				desk: "7",
+			},
+			{
+				number: "#O29",
+				type: "Out of ideas",
+				desk: "8",
+			},
+			{
+				number: "#T22",
+				type: "Test",
+				desk: "2",
+			},
+			{
+				number: "#R36",
+				type: "Report",
+				desk: "5",
+			},
+		];
 
-	let [ticket_calls, setTicketCalls] = useState(test_ticket_calls);
-	let [queue_list, setQueueList] = useState(test_queue_list);
+		let test_queue_list = [
+			{
+				type: "Account Management",
+				length: 13,
+			},
+			{
+				type: "Report",
+				length: 35,
+			},
+			{
+				type: "Out of ideas",
+				length: 2,
+			},
+			{
+				type: "Test",
+				length: 24,
+			},
+		];
+
+		console.log("Data update");
+
+		setQueueList(() => test_queue_list);
+		setTicketCalls(() => test_ticket_calls);
+	};
+
+	// useEffect, ogni 10s pull dei dati dal server
+	//	- Ultimi 10 biglietti
+	//	- Lunghezza coda
+
+	let [ticket_calls, setTicketCalls] = useState([]);
+	let [queue_list, setQueueList] = useState([]);
 
 	return (
 		<Container className="mt-3">
@@ -86,11 +102,18 @@ function TicketCalls(props) {
 				<ListGroup variant="flush" className="p-0">
 					{props.ticket_calls.map((ticket, i) => {
 						return (
-							<ListGroup.Item key={i} className="d-flex justify-content-between">
+							<ListGroup.Item
+								key={i}
+								className="d-flex justify-content-between"
+							>
 								<Container fluid>
 									<Row>
-										<Col><TicketBadge text={ticket.number}/></Col>
-										<Col className="text-end"><DeskBadge text={ticket.desk}/></Col>
+										<Col>
+											<TicketBadge text={ticket.number} />
+										</Col>
+										<Col className="text-end">
+											<DeskBadge text={ticket.desk} />
+										</Col>
 									</Row>
 								</Container>
 							</ListGroup.Item>
@@ -118,8 +141,7 @@ function QueueTab(props) {
 								<Row>
 									<Col className="d-flex align-items-center">{queue.type}</Col>
 									<Col>
-										Serving ticket{" "}
-										<TicketBadge text={queue.serving_ticket} />{" "}
+										Serving ticket <TicketBadge text={queue.serving_ticket} />{" "}
 										<br />
 										Desk <DeskBadge text={queue.desk} />
 									</Col>

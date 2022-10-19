@@ -27,7 +27,7 @@ app.use(cors(corsOptions));
 
 
 //Controllers
-const ticketDAO = require('./DAO/ticketDAO');
+const ticketDAO = require('./DAO/TicketDAO');
 const serviceDAO = require('./DAO/ServiceDAO');
 const counterDAO = require('./DAO/CounterDAO');
 

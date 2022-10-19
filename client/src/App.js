@@ -14,7 +14,7 @@ import {
 	PersonBadgeFill,
 } from "react-bootstrap-icons";
 
-import API from './API';
+import API from "./API";
 import Navbar from "react-bootstrap/Navbar";
 import CustomerPage from "./pages/CustomerPage";
 import QueuePage from "./pages/QueuePage";
@@ -25,19 +25,27 @@ import OfficerPage from "./pages/OfficerPage";
 function App() {
 	// States regarding loggedIn status
 	const [loggedIn, setLoggedIn] = useState(false);
+	const [user, setUser] = useState("");
 	const [userType, setUserType] = useState(""); // Can be "Officer" or "Manager"
-	const [services, setServices] = useState([])
+	const [services, setServices] = useState([]);
 
+	// Get list of all available services
 	useEffect(() => {
 		const getServiceInfo = async () => {
 			await API.getServiceInfo()
 				.then((s) => {
-					console.log("try",s)
-					setServices(() => s)
+					console.log("try", s);
+					setServices(() => s);
 				})
 				.catch();
-		}
-		getServiceInfo()
+		};
+		// DEBUG
+		//getServiceInfo();
+		let test = [
+			{ NAME: "Report", ID: "1" },
+			{ NAME: "Account Management", ID: "2" },
+		];
+		setServices(() => test);
 	}, []);
 
 	return (
@@ -47,8 +55,17 @@ function App() {
 					path="/"
 					element={
 						<>
-							<OfficeNavbar showLogin={true} loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
-							<MainApp loggedIn={loggedIn} userType={userType} services={services}/>
+							<OfficeNavbar
+								showLogin={true}
+								loggedIn={loggedIn}
+								setLoggedIn={setLoggedIn}
+								user={user}
+							/>
+							<MainApp
+								loggedIn={loggedIn}
+								userType={userType}
+								services={services}
+							/>
 						</>
 					}
 				/>
@@ -56,8 +73,12 @@ function App() {
 					path="/login"
 					element={
 						<>
-							<OfficeNavbar showLogin={false} loggedIn={loggedIn} />
-							<LoginPage setLoggedIn={setLoggedIn} setUserType={setUserType} />
+							<OfficeNavbar showLogin={false} loggedIn={loggedIn} user={user} />
+							<LoginPage
+								setLoggedIn={setLoggedIn}
+								setUser={setUser}
+								setUserType={setUserType}
+							/>
 						</>
 					}
 				/>
@@ -85,10 +106,10 @@ function MainApp(props) {
 		} else if (props.userType === "Officer") {
 			page = <OfficerPage />;
 		} else {
-			// Show 404 page?
+			// TODO: Show 404 page
 		}
 	} else {
-		page = <CustomerPage services={props.services}/>;
+		page = <CustomerPage services={props.services} />;
 	}
 
 	return page;
@@ -96,6 +117,12 @@ function MainApp(props) {
 
 function OfficeNavbar(props) {
 	let navigate = useNavigate();
+
+	const doLogout = () => {
+		props.setLoggedIn(false);
+		props.setUserType("");
+		props.setUser();
+	};
 
 	return (
 		<Navbar bg="warning">
@@ -107,11 +134,18 @@ function OfficeNavbar(props) {
 					<Navbar.Brand className="justify-content-end">
 						{props.loggedIn ? (
 							<>
-								Logout <PersonBadgeFill size={30} onClick={() => props.setLoggedIn(false)}/>
+								User: {props.user.name} | Desk: {props.user.desk}{" "}
+								<PersonBadgeFill size={30} onClick={doLogout} />
 							</>
 						) : (
 							<>
-								Login <PersonBadge size={30} onClick={() => {navigate('/login')}}/>
+								Login{" "}
+								<PersonBadge
+									size={30}
+									onClick={() => {
+										navigate("/login");
+									}}
+								/>
 							</>
 						)}
 					</Navbar.Brand>

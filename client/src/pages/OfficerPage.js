@@ -14,12 +14,16 @@ import { useState } from "react";
 import Alert from "react-bootstrap/Alert";
 
 function OfficerPage() {
-	// Get all service types
-
-	let all_services = ["Report", "Account Management", "Out of ideas", "Test"]; // TODO: get from server
+	// Get all service types (API)
+	let all_services = ["Report", "Account Management", "Out of ideas", "Test"];
 	let [services, setServices] = useState([]);
+	let [nextTicket, setNextTicket] = useState("");
 
-	let firstTime, nextClient;
+	const handleNextClient = () => {
+		// In services there are the service types on which to call the API
+		// callNextCustomer (API)
+		setNextTicket({number: "32", serviceType: "Report"});
+	}
 
 	return (
 		<Container>
@@ -28,15 +32,19 @@ function OfficerPage() {
 					<ListGroup variant="flush">
 						{all_services.map((service, i) => {
 							let button;
-							console.log(
-								service + " - " + services + " | " + services.includes(service)
-							);
 							if (services.includes(service)) {
-								button = <Button variant="danger" onClick={() => {
-									setServices((old) => {
-										return old.filter((item) => (item !== service));
-									});
-								}}>-</Button>;
+								button = (
+									<Button
+										variant="danger"
+										onClick={() => {
+											setServices((old) => {
+												return old.filter((item) => item !== service);
+											});
+										}}
+									>
+										-
+									</Button>
+								);
 							} else {
 								button = (
 									<Button
@@ -67,22 +75,18 @@ function OfficerPage() {
 				<Col className="mt-2">
 					<Button
 						variant="primary"
-						onClick={() => {
-							/* nextClient = props.getNextClient(props.officer); */
-							firstTime = false;
-						}}
+						onClick={handleNextClient}
 					>
 						Call next client
 					</Button>
-					<Row className="mt-2">
-						<Alert key="success">Serving ticket X for service Y</Alert>
-					</Row>
+					{nextTicket ? <Row className="mt-2">
+						<Alert key="success">Serving ticket {nextTicket.number} for service: {nextTicket.serviceType}</Alert>
+					</Row> : null }
+					
 				</Col>
 			</Row>
 		</Container>
 	);
 }
-
-function ServiceButton() {}
 
 export default OfficerPage;
