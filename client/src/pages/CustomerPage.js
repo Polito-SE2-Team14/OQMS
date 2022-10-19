@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Container, Row, Button, Form } from "react-bootstrap";
-import { propTypes } from "react-bootstrap/esm/Image";
 
 // Move in separate file
 function CustomerPage(props) {
@@ -8,7 +7,8 @@ function CustomerPage(props) {
 	//call apis to get service
 	
 	const [service, setService] = useState(null);
-	const [active, setActive] = useState(false)
+	const [active, setActive] = useState(false);
+	const [ticket, setTicket] = useState(null);
 
 	
 
@@ -19,9 +19,13 @@ function CustomerPage(props) {
 	const showTicket = () => {
 		console.log(service)
 		setActive(true)
-		setTimeout( () => setActive(false), 5000)
+		// setTimeout( () => setActive(false), 5000)
+
+		let nextTicket=props.askForTicket(service.id);
+		setTicket(nextTicket);
 	}
 
+	
 	return <Container>
 		<Row>
 			<h1>Decide the service</h1>
@@ -47,6 +51,15 @@ function CustomerPage(props) {
 		{(active) && <Row>
 			<h1>{service.NAME + " " + service.ID}</h1>
 		</Row>}
+
+		{ticket!=null?
+			<>
+				<Row>
+					<h1>Your ticket number is {ticket.ticketId}. The estimated waiting time is {ticket.ETA}</h1>
+				</Row>
+			</>
+		:
+			false}
 		
 
 	</Container>

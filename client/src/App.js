@@ -48,7 +48,7 @@ function App() {
 					element={
 						<>
 							<OfficeNavbar showLogin={true} loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
-							<MainApp loggedIn={loggedIn} userType={userType} services={services}/>
+							<MainApp loggedIn={loggedIn} userType={userType} services={services} askForTicket={API.askForTicket}/>
 						</>
 					}
 				/>
@@ -88,7 +88,7 @@ function MainApp(props) {
 			// Show 404 page?
 		}
 	} else {
-		page = <CustomerPage services={props.services}/>;
+		page = <CustomerPage services={props.services} askForTicket={props.askForTicket}/>;
 	}
 
 	return page;

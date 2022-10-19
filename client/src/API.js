@@ -32,8 +32,14 @@ const askForTicket = async (serviceID) =>{
         },
         credentials: 'include',
         body: JSON.stringify(serviceID)
-
     });
+    if (response.ok){
+        const ticket = await response.json();
+        return ticket;
+    }else{
+        const errDetail = await response.json();
+        throw errDetail;
+    }
 }
 
 const callNextCustomer = async (params) =>{
