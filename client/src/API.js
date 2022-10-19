@@ -6,7 +6,7 @@ const getServiceInfo = async () => {
         .catch(err => { throw err })
     if (response.ok) {
         const services = await response.json();
-        console.log(services);
+        // console.log(services);
         return services;
 
     }
@@ -31,7 +31,7 @@ const askForTicket = async (serviceID) =>{
             'Content-Type': 'application/json'
         },
         credentials: 'include',
-        body: JSON.stringify(serviceID)
+        body: JSON.stringify({"serviceID" : serviceID})
     });
     if (response.ok){
         const ticket = await response.json();

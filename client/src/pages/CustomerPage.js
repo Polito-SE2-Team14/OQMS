@@ -14,14 +14,13 @@ function CustomerPage(props) {
 
 	let services = props.services;
 
-	console.log("services",services)
+	// console.log("services",services)
 
-	const showTicket = () => {
-		console.log(service)
-		setActive(true)
+	const showTicket = async() => {
+		// console.log(service.ID);
+		setActive(true);
 		// setTimeout( () => setActive(false), 5000)
-
-		let nextTicket=props.askForTicket(service.id);
+		let nextTicket= await props.askForTicket(service.ID);
 		setTicket(nextTicket);
 	}
 
@@ -54,8 +53,8 @@ function CustomerPage(props) {
 
 		{ticket!=null?
 			<>
-				<Row>
-					<h1>Your ticket number is {ticket.ticketId}. The estimated waiting time is {ticket.ETA}</h1>
+				<Row >
+					<h1>Your ticket number is {ticket.ticketID}. The estimated waiting time is {Math.round(ticket.ETA)} minutes</h1>
 				</Row>
 			</>
 		:
