@@ -35,6 +35,7 @@ exports.getServicesForCounter = (counterID) => {
     DB.all(sql, [counterID],
       (err, rows) => {
         if (err) {
+          console.log("service error")
           reject(err);
         } else {
           resolve(rows);

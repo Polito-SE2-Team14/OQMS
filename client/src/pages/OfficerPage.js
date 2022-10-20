@@ -5,36 +5,45 @@ import {
 	Row,
 	Col,
 	Button,
-	Collapse,
-	Tooltip,
-	OverlayTrigger,
 	ListGroup,
 } from "react-bootstrap";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Alert from "react-bootstrap/Alert";
+import API from "../API";
 
-function OfficerPage() {
+function OfficerPage(props) {
 	// Get all service types
-
-	let all_services = ["Report", "Account Management", "Out of ideas", "Test"]; // TODO: get from server
 	let [services, setServices] = useState([]);
+	let [nextTicket, setNextTicket] = useState("");
 
-	let firstTime, nextClient;
+	const handleNextClient = () => {
+		const getNextTicket = async () => {
+			await API.callNextCustomer({counterId: props.user.desk})
+				.then((res) => {
+					setNextTicket(res);
+				})
+				.catch();
+		}
+		getNextTicket();
+		// In services there are the service types on which to call the API
+		// callNextCustomer (API)
+	}
+
+	useEffect(() => {
+	}, []);
 
 	return (
 		<Container>
 			<Row>
 				<Col>
 					<ListGroup variant="flush">
-						{all_services.map((service, i) => {
+						{props.services.map((service, i) => {
+							
 							let button;
-							console.log(
-								service + " - " + services + " | " + services.includes(service)
-							);
 							if (services.includes(service)) {
 								button = <Button variant="danger" onClick={() => {
 									setServices((old) => {
-										return old.filter((item) => (item !== service));
+										return old.filter((item) => (item.ID !== service.ID));
 									});
 								}}>-</Button>;
 							} else {
@@ -57,7 +66,7 @@ function OfficerPage() {
 									key={i}
 									className="d-flex justify-content-between align-items-center"
 								>
-									{service}
+									{service.NAME}
 									{button}
 								</ListGroup.Item>
 							);
@@ -67,22 +76,17 @@ function OfficerPage() {
 				<Col className="mt-2">
 					<Button
 						variant="primary"
-						onClick={() => {
-							/* nextClient = props.getNextClient(props.officer); */
-							firstTime = false;
-						}}
+						onClick={handleNextClient}
 					>
 						Call next client
 					</Button>
-					<Row className="mt-2">
-						<Alert key="success">Serving ticket X for service Y</Alert>
-					</Row>
+					{nextTicket ? <Row className="mt-2">
+						<Alert key="success">Serving ticket {nextTicket} </Alert>
+					</Row> : null }
 				</Col>
 			</Row>
 		</Container>
 	);
 }
-
-function ServiceButton() {}
 
 export default OfficerPage;
