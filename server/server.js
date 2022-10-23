@@ -134,10 +134,8 @@ app.put('/api/next', async (req, res) => {
   await counterDAO.getServicesForCounter(counterId)
     .then(serviceIds => ticketDAO.getNextClient(serviceIds))
     .then(ticketId => ticketDAO.setServedClient(ticketId))
-    .then(ticketId => res.status(200).json(ticketId))
+    .then(ticketId => res.status(200).json({ticketId: ticketId}))
     .catch(() => res.status(500).send("Internal Server Error"));
-
-  //return res.status(200).json({message:"Next"});
 });
 
 
