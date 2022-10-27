@@ -27,7 +27,7 @@ app.use(cors(corsOptions));
 
 
 //Controllers
-const ticketDAO = require('./DAO/ticketDAO');
+const ticketDAO = require('./DAO/TicketDAO');
 const serviceDAO = require('./DAO/ServiceDAO');
 const counterDAO = require('./DAO/CounterDAO');
 
@@ -130,6 +130,7 @@ app.post('/api/ticket',
 //PUT /api/next
 app.put('/api/next', async (req, res) => {
   const counterId = req.body.counterId;
+  console.log("Counter Id: " + counterId);
 
   await counterDAO.getServicesForCounter(counterId)
     .then(serviceIds => ticketDAO.getNextClient(serviceIds))

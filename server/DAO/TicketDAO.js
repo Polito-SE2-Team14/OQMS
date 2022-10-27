@@ -35,47 +35,58 @@ exports.getCountInQueueForService = (serviceID) => {
 
 
 exports.getNextClient = (serviceIds) => {
-  const sql = "SELECT id, timestamp from Ticket WHERE serviceId = ? AND served = 0";
+  const sql = "SELECT id, date, timestamp from Ticket WHERE serviceId = ? AND served = 0";
   let now = dayjs().unix();
+
 
   let tickets = [];
   serviceIds.forEach(serviceId => {
     tickets.push(new Promise((resolve, reject) => {
-      DB.all(sql, [serviceId], (err, rows) => {
-          if (err)
+      DB.all(sql, [serviceId.SERVICEID], (err, rows) => {
+          if (err){
+            console.log("ticket selection error")
             reject(err);
+          }
           else
-            resolve(rows.map(row => {
+            {
+              resolve(rows.map(row => {
+                let correct_format_date = row.DATE.split('-').reverse().join('-');
               return {
                 id: row.ID,
-                wait: now - dayjs(row.TIMESTAMP).unix()
+                wait: now - dayjs(correct_format_date + " " + row.TIMESTAMP).unix()
               }
-            }));
+            }));}
         });
     }))
   });
 
+  
   return Promise.all(tickets).then(ids => {
-    let max = [0, 0];
+    let max_wait = 0;
+    let ticket_id = "";
 
-    ids.forEach(array => {
-      for(id in array)
-        if (id.wait > max[1])
-          max = [id.id, id.wait]
-    });
+    ids.flat().forEach((ticket) => {
+      if(ticket.wait >= max_wait) {
+        max_wait = ticket.wait;
+        ticket_id = ticket.id;
+      }
+    })
 
-    return max[0];
+    console.log(ticket_id);
+    return ticket_id;
   });
 }
 
 exports.setServedClient = ticketId => {
   return new Promise((resolve, reject) => {
-    const sql = "UPDATE Ticket SET served = 1 WHERE ticketId = ?";
+    const sql = "UPDATE Ticket SET served = 1 WHERE id = ?";
     DB.run(sql, [ticketId], err => {
-        if (err)
+        if (err){
+          console.log("ticket update error")
           reject(err);
-        else
-          resolve(ticketId);
+        }
+        
+        resolve(ticketId);
       });
   });
 }
