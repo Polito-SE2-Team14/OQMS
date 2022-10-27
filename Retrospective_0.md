@@ -28,9 +28,9 @@ RETROSPECTIVE (Team 14)
 |--------|---------|--------|------------|--------------|
 |  _#0_  |    3    |   _    |   3h 45m   |      6h      |
 |  _#1_  |    1    |   5    |     3h     |      5h      |
-|  _#2_  |         |   3    |     5h     |      5h      |
-|  _#3_  |         |   2    |     4h     |      0h      |   
-|  _#4_  |         |   5    |   6h 30m   |   1d 1h 45m  |
+|  _#2_  |    2    |   3    |     5h     |      5h      |
+|  _#3_  |         |   2    |     4h     |      0h      |
+|  _#4_  |    2    |   5    |   6h 30m   |   1d 1h 45m  |
 
 
 > place technical tasks corresponding to story `#0` and leave out story points (not applicable in this case)
