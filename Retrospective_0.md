@@ -9,9 +9,9 @@ RETROSPECTIVE (Team 14)
 
 ### Macro statistics
 
-- Number of stories committed vs. done 
-- Total points committed vs. done 
-- Nr of hours planned vs. spent (as a team)
+- Number of stories committed vs. done: 3 vs 2
+- Total points committed vs. done: 13 vs 8 
+- Nr of hours planned vs. spent (as a team): 21 vs 28
 
 **Remember** a story is done ONLY if it fits the Definition of Done:
  
@@ -26,16 +26,22 @@ RETROSPECTIVE (Team 14)
 
 | Story  | # Tasks | Points | Hours est. | Hours actual |
 |--------|---------|--------|------------|--------------|
-| _#0_   |         |        |            |              |
-| _#1_   |         |        |            |      5h      |
-| _#2_   |         |        |            |              |
-| _#3_   |         |        |            |              |   
-| _#4_   |         |        |            |   1d 1h 45m  |
+|  _#0_  |    3    |   _    |   3h 45m   |      6h      |
+|  _#1_  |    1    |   5    |     3h     |      5h      |
+|  _#2_  |         |   3    |     5h     |      5h      |
+|  _#3_  |         |   2    |     4h     |      0h      |   
+|  _#4_  |         |   5    |   6h 30m   |   1d 1h 45m  |
+
 
 > place technical tasks corresponding to story `#0` and leave out story points (not applicable in this case)
 
 - Hours per task average, standard deviation (estimate and actual)
+  - Estimated task average = 2h 20m
+  - Estimated task standard deviation = 16
+  - Actual task average = 3h 10m
+  - Actual task standard deviation = 47
 - Total task estimation error ratio: sum of total hours estimation / sum of total hours spent - 1
+  - -0.25
 
   
 ## QUALITY MEASURES 
